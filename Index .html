@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>План тренировок · Full Body ×3</title>
+<style>
+:root{
+  --bg:#0f1115; --card:#1a1d24; --card2:#21252e; --accent:#ff5a3c;
+  --accent2:#ffb03c; --text:#e8eaed; --muted:#9aa0aa; --line:#2c313b;
+  --chest:#ff5a3c; --bi:#ffb03c; --back:#4cc9f0; --legs:#9b5de5; --sh:#43d685; --core:#f15bb5;
+  --ok:#43d685;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.55;padding:0 0 60px}
+header{padding:34px 20px 28px;background:linear-gradient(135deg,#1a1d24,#0f1115);border-bottom:1px solid var(--line)}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+h1{font-size:1.6rem;font-weight:800;letter-spacing:-.5px}
+.sub{color:var(--muted);margin-top:6px;font-size:.95rem}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.tag{background:var(--card2);border:1px solid var(--line);border-radius:20px;padding:5px 13px;font-size:.8rem;color:var(--muted)}
+.tag b{color:var(--text);font-weight:600}
+.note{background:var(--card);border-left:3px solid var(--accent);border-radius:10px;padding:14px 16px;margin:22px 0;font-size:.9rem;color:var(--muted)}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+.btn{background:var(--card2);border:1px solid var(--line);color:var(--text);border-radius:9px;padding:9px 14px;font-size:.85rem;font-weight:600;cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--accent)}
+.btn.exp{border-color:var(--accent2);color:var(--accent2)}
+.day{margin-top:30px}
+.day-h{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.day-n{background:var(--accent);color:#fff;width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0}
+.day-h h2{font-size:1.25rem;font-weight:700}
+.day-sub{color:var(--muted);font-size:.85rem;margin:0 0 14px 46px}
+.day-save{display:flex;align-items:center;gap:10px;margin:0 0 16px 46px;flex-wrap:wrap}
+.day-save input[type=date]{background:var(--card2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:7px 10px;font-size:.85rem}
+.btn.save{border-color:var(--ok);color:var(--ok)}
+.saved-msg{color:var(--ok);font-size:.82rem;opacity:0;transition:.3s}
+.saved-msg.show{opacity:1}
+.ex{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:14px}
+.ex-top{display:flex;gap:14px;padding:14px;align-items:flex-start}
+.ex img{width:120px;height:90px;object-fit:cover;border-radius:9px;flex-shrink:0;background:var(--card2)}
+.ex-info{flex:1;min-width:0}
+.ex-name{font-weight:700;font-size:1.02rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.sets{display:inline-block;background:var(--card2);border-radius:7px;padding:3px 9px;font-size:.82rem;color:var(--accent2);font-weight:600;margin-top:6px}
+.ex-instr{padding:0 14px 12px;font-size:.88rem;color:var(--muted)}
+.ex-instr ol{margin:0;padding-left:18px}
+.ex-instr li{margin:3px 0}
+.mg{font-size:.74rem;color:var(--muted);background:var(--card2);border-radius:6px;padding:2px 8px}
+.log{border-top:1px dashed var(--line);padding:12px 14px;background:var(--card2)}
+.log-hint{font-size:.74rem;color:var(--muted);margin-bottom:8px}
+.log-row{display:flex;gap:8px;align-items:center;margin-bottom:7px;flex-wrap:wrap}
+.log-row:last-child{margin-bottom:0}
+.log-row .lab{font-size:.78rem;color:var(--muted);width:62px;flex-shrink:0}
+.log select{background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:7px;padding:6px 6px;font-size:.85rem;min-width:78px}
+.log select:focus{border-color:var(--accent);outline:none}
+.log select.set-w{min-width:92px}
+.log .x{color:var(--muted);font-size:.8rem}
+.hist-toggle{margin-top:10px;font-size:.8rem;color:var(--accent2);cursor:pointer;user-select:none;display:inline-flex;align-items:center;gap:5px}
+.hist{display:none;margin-top:8px;font-size:.8rem}
+.hist.open{display:block}
+.hist table{width:100%;border-collapse:collapse}
+.hist th,.hist td{text-align:left;padding:4px 6px;border-bottom:1px solid var(--line);color:var(--muted)}
+.hist th{color:var(--text);font-weight:600;font-size:.76rem}
+.hist .empty{color:var(--muted);font-style:italic;padding:6px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:18px 0;font-size:.82rem;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:6px}
+footer{color:var(--muted);font-size:.82rem;text-align:center;margin-top:40px;padding:0 16px}
+a{color:var(--accent2)}
+.warn{background:#2a1d15;border-left:3px solid var(--accent2);border-radius:10px;padding:13px 16px;margin:14px 0;font-size:.85rem;color:#e8d9c4}
+.deload{background:#15202a;border-left:3px solid var(--back);border-radius:10px;padding:13px 16px;margin:14px 0;font-size:.85rem;color:#cfe6f2}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap">
+<h1>🔥 Full Body ×3 — рельеф</h1>
+<div class="sub">Тренажёрный зал · возвращение в форму · акцент на грудь и бицепс</div>
+<div class="meta">
+<span class="tag">📅 <b>3 раза/неделю</b></span>
+<span class="tag">⏱ <b>60–90 мин</b></span>
+<span class="tag">🎯 <b>Жиросжигание / рельеф</b></span>
+<span class="tag">⚖️ <b>90 кг · старт мягкий</b></span>
+</div>
+</div>
+</header>
+
+<div class="wrap">
+<div class="warn" id="storageWarn">
+⚠️ <b>Чтобы результаты сохранялись</b> — скачай этот файл и открой его в браузере на телефоне/компьютере. Внутри предпросмотра данные не сохраняются между перезагрузками.
+</div>
+
+<div class="deload">
+🩺 <b>Ты возвращаешься после долгого перерыва.</b> Первые 2–3 недели работай в нижней части предложенных весов и НЕ до отказа — оставляй 3–4 повтора «в запасе». Цель сейчас — вернуть нервно-мышечную связь и подготовить связки, а не нагрузить мышцы. Веса в списках уже подобраны мягкими под вес 90 кг и растренированность; поднимай нагрузку только когда движение лёгкое и техника чистая.
+</div>
+
+<div class="toolbar">
+<button class="btn exp" onclick="exportData()">⬇️ Экспорт результатов</button>
+<button class="btn" onclick="document.getElementById('imp').click()">⬆️ Импорт</button>
+<input type="file" id="imp" accept=".json" style="display:none" onchange="importData(event)">
+<button class="btn" onclick="clearAll()">🗑 Сбросить всё</button>
+</div>
+
+<div class="note">
+<b>Как вести учёт.</b> Под каждым упражнением выбирай из выпадающих списков <b>вес</b> и <b>повторы</b> для каждого подхода — клавиатура не нужна. Подходов делай <b>от 2 до 5</b>: заполни нужные строки, лишние оставь на «—». Выбери дату вверху тренировки и нажми «Сохранить тренировку» — запись уйдёт в историю под упражнением.
+</div>
+
+<div class="legend">
+<span><span class="dot" style="background:var(--chest)"></span>Грудь</span>
+<span><span class="dot" style="background:var(--bi)"></span>Бицепс</span>
+<span><span class="dot" style="background:var(--back)"></span>Спина</span>
+<span><span class="dot" style="background:var(--legs)"></span>Ноги</span>
+<span><span class="dot" style="background:var(--sh)"></span>Плечи</span>
+<span><span class="dot" style="background:var(--core)"></span>Кор/трицепс</span>
+</div>
+
+<div class="day" data-day="A">
+<div class="day-h"><div class="day-n">A</div><h2>Тренировка A</h2></div>
+<div class="day-sub">Пн или начало недели · акцент грудь</div>
+<div class="day-save">
+<input type="date" class="day-date">
+<button class="btn save" onclick="saveDay('A')">💾 Сохранить тренировку</button>
+<span class="saved-msg" id="msg-A">Сохранено ✓</span>
+</div>
+
+<div class="ex" data-ex="A1" data-wmin="15" data-wmax="50" data-wstep="2.5">
+<div class="ex-top">
+<img src="https://i.ytimg.com/vi/xUm0BiZCWlQ/maxresdefault.jpg" alt="Жим в тренажёре на грудь">
+<div class="ex-info">
+<div class="ex-name"><span class="dot" style="background:var(--chest)"></span>Жим в тренажёре на грудь <span class="mg">грудь</span></div>
+<div class="sets">старт 4 × 10–12 · сейчас 2–3 подхода</div>
+</div>
+</div>
+<div class="ex-instr"><ol>
+<li>Сиденье так, чтобы ручки были на уровне середины груди.</li>
+<li>Спина прижата, лопатки сведены, стопы на полу.</li>
+<li>Выжимай плавно, не выбивая локти до упора.</li>
+<li>Медленно верни на вдохе, чувствуя растяжение грудных.</li>
+</ol></div>
+</div>
+
+<div class="ex" data-ex="A2" data-wmin="10" data-wmax="40" data-wstep="2.5">
+<div class="ex-top">
+<img src="https://i.ytimg.com/vi/lkrGZLA4nLM/maxresdefault.jpg" alt="Сведение рук бабочка">
+<div class="ex-info">
+<div class="ex-name"><span class="dot" style="background:var(--chest)"></span>Сведение «бабочка» (Pec Deck) <span class="mg">грудь</span></div>
+<div class="sets">старт 3 × 12–15</div>
+</div>
+</div>
+<div class="ex-instr"><ol>
+<li>Предплечья на подушки, локти на уровне плеч.</li>
+<li>Своди руки, концентрируясь на сжатии грудных.</li>
+<li>Задержи 1 сек в центре, плавно разведи.</li>
+<li>Не разводи за линию плеч — береги плечо.</li>
+</ol></div>
+</div>
+
+<div class="ex" data-ex="A3" data-wmin="20" data-wmax="60" data-wstep="2.5">
+<div class="ex-top">
+<img src="https://gymgeek.com/wp-content/uploads/2011/09/lat-pull-down.jpg" alt="Тяга верхнего блока">
+<div class="ex-info">
+<div class="ex-name"><span class="dot" style="background:var(--back)"></span>Тяга верхнего блока к груди <span class="mg">спина</span></div>
+<div class="sets">старт 4 × 10–12</div>
+</div>
+</div>
+<div class="ex-instr"><ol>
+<li>Хват чуть шире плеч, бёдра под валиком.</li>
+<li>Слегка отклони корпус, тяни к верху груди.</li>
+<li>Локти вниз-назад, сводя лопатки.</li>
+<li>Плавно отпусти до растяжения широчайших.</li>
+</ol></div>
+</div>
+
+<div class="ex" data-ex="A4" data-wmin="5" data-wmax="30" data-wstep="2.5">
+<div class="ex-top">
+<img src="https://setforset.com/cdn/shop/articles/cable-bicep-curls.jpg" alt="Бицепс на блоке">
+<div class="ex-info">
+<div class="ex-name"><span class="dot" style="background:var(--bi)"></span>Сгибание на бицепс на нижнем блоке <span class="mg">бицепс</span></div>
+<div class="sets">старт 4 × 10–12</div>
+</div>
+</div>
+<div class="ex-instr"><ol>
+<li>Локти прижаты к корпусу, рукоять прямая/EZ.</li>
+<li>Сгибай руки к плечам — двигаются только предплечья.</li>
+<li>Сожми бицепс вверху, медленно опусти.</li>
+<li>Не помогай спиной, локти не уводи вперёд.</li>
+</ol></div>
+</div>
+
+<div class="ex" data-ex="A5" data-wmin="10" data-wmax="40" data-wstep="2.5">
+<div class="ex-top">
+<img src="https://www.puregym.com/media/cmwhncdc/shoulder-press_header.jpg" alt="Жим на плечи">
+<div class="ex-info">
+<div class="ex-name"><span class="dot" style="background:var(--sh)"></span>Жим в тренажёре на плечи <span class="mg">плечи</span></div>
+<div class="sets">старт 3 × 12</div>
+</div>
+</div>
+<div class="ex-instr"><ol>
+<li>Ручки на уровне плеч.</li>
+<li>Выжимай вверх, не блокируя локти.</li>
+<li>Опускай медленно, не ниже уровня плеч.</li>
+</ol></div>
+</div>
+
+<div class="ex" data-ex="A6" data-wmin="10" data-wmax="50" data-wstep="2.5">
+<div class="ex-top">
+<img src="https://www.bodybuildingwizard.com/wp-content/uploads/2018/01/cable-crunch-exercise.jpg" alt="Скручивания на блоке">
+<div class="ex-info">
+<div class="ex-name"><span class="dot" style="background:var(--core)"></span>Скручивания на верхнем блоке <span class="mg">пресс</span></div>
+<div class="sets">старт 3 × 15–20</div>
+</div>
+</div>
+<div class="ex-instr"><ol>
+<li>На коленях, канат за головой, бёдра неподвижны.</li>
+<li>Скручивайся вниз за счёт пресса.</li>
+<li>Не тяни руками, плавный возврат.</li>
+</ol></div>
+</div>
+</div>
+
+<div class="day" data-day="B">
+<div class="day-h"><div class="day-n">B</div><h2>Тренировка B</h2></div>
+<div class="day-sub">Ср или середина недели · акцент бицепс/спина</div>
+<div class="day-save">
+<input type="date" class="day-date">
+<button class="btn save" onclick="saveDay('B')">💾 Сохранить тренировку</button>
+<span class="saved-msg" id="msg-B">Сохранено ✓</span>
+</div>
+
+<div class="ex" data-ex="B1" data-wmin="40" data-wmax="140" data-wstep="5">
+<div class="ex-top">
+<img src="https://hoistfitness.com/cdn/shop/products/HV-LP_action.jpg" alt="Жим ногами">
+<div class="ex-info">
+<div class="ex-name"><span class="dot" style="background:var(--legs)"></span>Жим ногами в тренажёре <span class="mg">ноги</span></div>
+<div class="sets">старт 4 × 12</div>
+</div>
+</div>
+<div class="ex-instr"><ol>
+<li>Стопы на ширине плеч, спина и таз прижаты.</li>
+<li>Опускай до ~90° в коленях, колени по линии стоп.</li>
+<li>Выжимай через пятки, не блокируя колени.</li>
+<li>Не отрывай поясницу от спинки.</li>
+</ol></div>
+</div>
+
+<div class="ex" data-ex="B2" data-wmin="20" data-wmax="60" data-wstep="2.5">
+<div class="ex-top">
+<img src="https://jaseliberty.com/wp-content/uploads/seated-cable-row.jpg" alt="Горизонтальная тяга">
+<div class="ex-info">
+<div class="ex-name"><span class="dot" style="background:var(--back)"></span>Горизонтальная тяга на блоке <span class="mg">спина</span></div>
+<div class="sets">старт 4 × 10–12</div>
+</div>
+</div>
+<div class="ex-instr"><ol>
+<li>Чуть согни колени, спина прямая, грудь раскрыта.</li>
+<li>Тяни к низу живота, сводя лопатки.</li>
+<li>Локти вдоль корпуса, без рывков.</li>
+<li>Плавно верни вперёд, растягивая широчайшие.</li>
+</ol></div>
+</div>
+
+<div class="ex" data-ex="B3" data-wmin="15" data-wmax="50" data-wstep="2.5">
+<div class="ex-top">
+<img src="https://i.ytimg.com/vi/xUm0BiZCWlQ/maxresdefault.jpg" alt="Жим на грудь">
+<div class="ex-info">
+<div class="ex-name"><span class="dot" style="background:var(--chest)"></span>Жим в тренажёре на грудь (наклонный) <span class="mg">грудь</span></div>
+<div class="sets">старт 4 × 10–12</div>
+</div>
+</div>
+<div class="ex-instr"><ol>
+<li>Наклонный вариант смещает нагрузку на верх груди.</li>
+<li>Спина прижата, выжимай плавно вперёд-вверх.</li>
+<li>Контролируй негатив, чувствуй растяжение.</li>
+</ol></div>
+</div>
+
+<div class="ex" data-ex="B4" data-wmin="5" data-wmax="30" data-wstep="2.5">
+<div class="ex-top">
+<img src="https://homegymreview.co.uk/wp-content/uploads/cable-bicep-curl.jpg" alt="Молотковые сгибания">
+<div class="ex-info">
+<div class="ex-name"><span class="dot" style="background:var(--bi)"></span>Молотковые сгибания на блоке (канат) <span class="mg">бицепс</span></div>
+<div class="sets">старт 4 × 12</div>
+</div>
+</div>
+<div class="ex-instr"><ol>
+<li>Канат нейтральным хватом (ладони друг к другу).</li>
+<li>Сгибай, локти прижаты к корпусу.</li>
+<li>Грузит бицепс и плечевую — добавляет объём.</li>
+<li>Медленно опусти, без раскачки.</li>
+</ol></div>
+</div>
+
+<div class="ex" data-ex="B5" data-wmin="15" data-wmax="55" data-wstep="2.5">
+<div class="ex-top">
+<img src="https://i.ytimg.com/vi/2-LAMcpzODU/maxresdefault.jpg" alt="Разгибание ног">
+<div class="ex-info">
+<div class="ex-name"><span class="dot" style="background:var(--legs)"></span>Разгибание ног в тренажёре <span class="mg">квадрицепс</span></div>
+<div class="sets">старт 3 × 15</div>
+</div>
+</div>
+<div class="ex-instr"><ol>
+<li>Валик чуть выше стоп, спина прижата.</li>
+<li>Разгибай почти до прямого, сжимая квадрицепс.</li>
+<li>Плавно опускай, без рывков в колене.</li>
+</ol></div>
+</div>
+
+<div class="ex" data-ex="B6" data-wmin="10" data-wmax="40" data-wstep="2.5">
+<div class="ex-top">
+<img src="https://i.ytimg.com/vi/ph3pddpKzzw/maxresdefault.jpg" alt="Трицепс на блоке">
+<div class="ex-info">
+<div class="ex-name"><span class="dot" style="background:var(--core)"></span>Разгибание на трицепс на блоке <span class="mg">трицепс</span></div>
+<div class="sets">старт 3 × 12–15</div>
+</div>
+</div>
+<div class="ex-instr"><ol>
+<li>Локти прижаты, рукоять прямая/канат.</li>
+<li>Разгибай вниз до полного выпрямления.</li>
+<li>Возврат плавный, локти не вперёд.</li>
+</ol></div>
+</div>
+</div>
+
+<div class="day" data-day="C">
+<div class="day-h"><div class="day-n">C</div><h2>Тренировка C</h2></div>
+<div class="day-sub">Пт или конец недели · акцент грудь + руки</div>
+<div class="day-save">
+<input type="date" class="day-date">
+<button class="btn save" onclick="saveDay('C')">💾 Сохранить тренировку</button>
+<span class="saved-msg" id="msg-C">Сохранено ✓</span>
+</div>
+
+<div class="ex" data-ex="C1" data-wmin="10" data-wmax="40" data-wstep="2.5">
+<div class="ex-top">
+<img src="https://i.ytimg.com/vi/lkrGZLA4nLM/maxresdefault.jpg" alt="Бабочка">
+<div class="ex-info">
+<div class="ex-name"><span class="dot" style="background:var(--chest)"></span>Сведение «бабочка» (Pec Deck) <span class="mg">грудь</span></div>
+<div class="sets">старт 4 × 12–15</div>
+</div>
+</div>
+<div class="ex-instr"><ol>
+<li>Изолирует грудные — хороший старт для прочувствования.</li>
+<li>Своди плавно, сжатие 1 сек в центре.</li>
+<li>Не разводи за линию плеч.</li>
+</ol></div>
+</div>
+
+<div class="ex" data-ex="C2" data-wmin="15" data-wmax="50" data-wstep="2.5">
+<div class="ex-top">
+<img src="https://i.ytimg.com/vi/xUm0BiZCWlQ/maxresdefault.jpg" alt="Жим на грудь">
+<div class="ex-info">
+<div class="ex-name"><span class="dot" style="background:var(--chest)"></span>Жим в тренажёре на грудь <span class="mg">грудь</span></div>
+<div class="sets">старт 4 × 10–12</div>
+</div>
+</div>
+<div class="ex-instr"><ol>
+<li>После бабочки грудь разогрета — работай в полную силу.</li>
+<li>Лопатки сведены, движение контролируемое.</li>
+</ol></div>
+</div>
+
+<div class="ex" data-ex="C3" data-wmin="20" data-wmax="60" data-wstep="2.5">
+<div class="ex-top">
+<img src="https://gymgeek.com/wp-content/uploads/2011/09/lat-pull-down.jpg" alt="Тяга обратным хватом">
+<div class="ex-info">
+<div class="ex-name"><span class="dot" style="background:var(--back)"></span>Тяга верхнего блока (обратный хват) <span class="mg">спина+бицепс</span></div>
+<div class="sets">старт 4 × 10–12</div>
+</div>
+</div>
+<div class="ex-instr"><ol>
+<li>Узкий обратный хват сильнее включает бицепс.</li>
+<li>Тяни к груди, сводя лопатки, локти вниз.</li>
+<li>Плавный возврат с растяжением.</li>
+</ol></div>
+</div>
+
+<div class="ex" data-ex="C4" data-wmin="5" data-wmax="30" data-wstep="2.5">
+<div class="ex-top">
+<img src="https://setforset.com/cdn/shop/articles/cable-bicep-curls.jpg" alt="Бицепс на блоке">
+<div class="ex-info">
+<div class="ex-name"><span class="dot" style="background:var(--bi)"></span>Сгибание на бицепс на блоке <span class="mg">бицепс</span></div>
+<div class="sets">старт 4 × 10–12</div>
+</div>
+</div>
+<div class="ex-instr"><ol>
+<li>Локти прижаты, изолированная работа предплечий.</li>
+<li>Пик-сжатие вверху, медленный негатив.</li>
+<li>Первые недели — без отказа.</li>
+</ol></div>
+</div>
+
+<div class="ex" data-ex="C5" data-wmin="15" data-wmax="55" data-wstep="2.5">
+<div class="ex-top">
+<img src="https://i.ytimg.com/vi/Wp4BlxcFTkE/maxresdefault.jpg" alt="Сгибание ног">
+<div class="ex-info">
+<div class="ex-name"><span class="dot" style="background:var(--legs)"></span>Сгибание ног в тренажёре <span class="mg">бицепс бедра</span></div>
+<div class="sets">старт 3 × 12–15</div>
+</div>
+</div>
+<div class="ex-instr"><ol>
+<li>Валик чуть выше пяток, таз прижат.</li>
+<li>Подтягивай пятки к ягодицам.</li>
+<li>Плавно опускай, балансирует нагрузку с днём B.</li>
+</ol></div>
+</div>
+
+<div class="ex" data-ex="C6" data-wmin="10" data-wmax="50" data-wstep="2.5">
+<div class="ex-top">
+<img src="https://www.bodybuildingwizard.com/wp-content/uploads/2018/01/cable-crunch-exercise.jpg" alt="Скручивания">
+<div class="ex-info">
+<div class="ex-name"><span class="dot" style="background:var(--core)"></span>Скручивания на блоке <span class="mg">пресс</span></div>
+<div class="sets">старт 3 × 15–20</div>
+</div>
+</div>
+<div class="ex-instr"><ol>
+<li>Работа только прессом, бёдра неподвижны.</li>
+<li>Округляй спину, контролируй возврат.</li>
+</ol></div>
+</div>
+</div>
+
+<div class="note" style="border-left-color:var(--accent2)">
+<b>Кардио (после каждой тренировки):</b> 15–20 мин — дорожка под наклоном, эллипс или велотренажёр в спокойном темпе. На старте возвращения не гонись за интенсивностью. Под рельеф ключевое — дефицит калорий и 8–10 тыс. шагов в день.
+</div>
+
+<footer>
+Веса в списках — ориентир для возвращения в форму при весе ~90 кг; реальные стартовые цифры зависят от конкретного тренажёра, начни с нижних значений. Прибавляй вес только при чистой технике и лёгком выполнении. При болях/дискомфорте — снижай нагрузку.
+</footer>
+</div>
+
+<script>
+const STORE_KEY = 'fb3_workout_log_v2';
+const MAX_SETS = 5;
+let memStore = {};
+
+function loadStore(){
+  try{ const raw = localStorage.getItem(STORE_KEY); return raw ? JSON.parse(raw) : {}; }
+  catch(e){ return memStore; }
+}
+function persist(data){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(data)); }
+  catch(e){ memStore = data; }
+}
+
+function weightOptions(min, max, step){
+  let html = '<option value="">—</option>';
+  for(let w=min; w<=max+0.0001; w+=step){
+    const v = (Math.round(w*10)/10);
+    const label = (v % 1 === 0) ? v+' кг' : v+' кг';
+    html += '<option value="'+v+'">'+label+'</option>';
+  }
+  return html;
+}
+function repOptions(){
+  let html = '<option value="">—</option>';
+  for(let r=4; r<=20; r++){ html += '<option value="'+r+'">'+r+'</option>'; }
+  return html;
+}
+
+function buildInputs(){
+  document.querySelectorAll('.ex').forEach(function(ex){
+    const id = ex.dataset.ex;
+    const wmin = parseFloat(ex.dataset.wmin);
+    const wmax = parseFloat(ex.dataset.wmax);
+    const wstep = parseFloat(ex.dataset.wstep);
+    const wOpts = weightOptions(wmin, wmax, wstep);
+    const rOpts = repOptions();
+    const log = document.createElement('div');
+    log.className = 'log';
+    let rows = '<div class="log-hint">Заполни от 2 до 5 подходов · лишние оставь на «—»</div>';
+    for(let s=1;s<=MAX_SETS;s++){
+      rows += '<div class="log-row">'
+        + '<span class="lab">Подход '+s+'</span>'
+        + '<select class="set-w" data-ex="'+id+'" data-set="'+s+'" data-f="w">'+wOpts+'</select>'
+        + '<span class="x">×</span>'
+        + '<select class="set-r" data-ex="'+id+'" data-set="'+s+'" data-f="r">'+rOpts+'</select>'
+        + '<span class="x" style="font-size:.72rem">повт</span>'
+        + '</div>';
+    }
+    rows += '<div class="hist-toggle" onclick="toggleHist(\''+id+'\')">▾ История (<span id="hc-'+id+'">0</span>)</div>'
+          + '<div class="hist" id="hist-'+id+'"></div>';
+    log.innerHTML = rows;
+    ex.appendChild(log);
+  });
+}
+
+function toggleHist(id){ document.getElementById('hist-'+id).classList.toggle('open'); }
+
+function saveDay(day){
+  const dayEl = document.querySelector('.day[data-day="'+day+'"]');
+  const date = dayEl.querySelector('.day-date').value || new Date().toISOString().slice(0,10);
+  const store = loadStore();
+
+  dayEl.querySelectorAll('.ex').forEach(function(ex){
+    const id = ex.dataset.ex;
+    const sets = [];
+    ex.querySelectorAll('.log-row').forEach(function(row){
+      const w = row.querySelector('[data-f="w"]').value;
+      const r = row.querySelector('[data-f="r"]').value;
+      if(w!=='' || r!==''){ sets.push({w:w, r:r}); }
+    });
+    if(sets.length){
+      store[id] = store[id] || [];
+      store[id] = store[id].filter(function(e){ return e.date!==date; });
+      store[id].push({date:date, sets:sets});
+      store[id].sort(function(a,b){ return a.date<b.date?1:-1; });
+    }
+  });
+
+  persist(store);
+  renderHistory();
+  const msg = document.getElementById('msg-'+day);
+  msg.classList.add('show');
+  setTimeout(function(){ msg.classList.remove('show'); }, 1800);
+}
+
+function renderHistory(){
+  const store = loadStore();
+  document.querySelectorAll('.ex').forEach(function(ex){
+    const id = ex.dataset.ex;
+    const box = document.getElementById('hist-'+id);
+    const cnt = document.getElementById('hc-'+id);
+    if(!box) return;
+    const entries = store[id] || [];
+    cnt.textContent = entries.length;
+    if(!entries.length){ box.innerHTML = '<div class="empty">пока нет записей</div>'; return; }
+    let html = '<table><tr><th>Дата</th><th>Подходы (кг × повт)</th></tr>';
+    entries.forEach(function(e){
+      const sets = e.sets.map(function(s){ return (s.w||'–')+'×'+(s.r||'–'); }).join(', ');
+      html += '<tr><td>'+e.date+'</td><td>'+sets+'</td></tr>';
+    });
+    html += '</table>';
+    box.innerHTML = html;
+  });
+}
+
+function exportData(){
+  const store = loadStore();
+  const blob = new Blob([JSON.stringify(store,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'workout_results_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+function importData(ev){
+  const file = ev.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try{ const data = JSON.parse(e.target.result); persist(data); renderHistory(); alert('Импортировано ✓'); }
+    catch(err){ alert('Ошибка чтения файла'); }
+  };
+  reader.readAsText(file);
+}
+function clearAll(){
+  if(!confirm('Удалить все сохранённые результаты?')) return;
+  try{ localStorage.removeItem(STORE_KEY); }catch(e){}
+  memStore = {};
+  renderHistory();
+}
+
+buildInputs();
+renderHistory();
+(function checkStorage(){
+  try{ localStorage.setItem('__t','1'); localStorage.removeItem('__t'); document.getElementById('storageWarn').style.display='none'; }
+  catch(e){}
+})();
+document.querySelectorAll('.day-date').forEach(function(d){ d.value = new Date().toISOString().slice(0,10); });
+</script>
+
+</body>
+</html>
